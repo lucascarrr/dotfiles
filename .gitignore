@@ -4,5 +4,8 @@ tmux/.config/tmux/plugins/
 # nvim plugin lockfile (optional: remove if you want to pin versions)
 # nvim/.config/nvim/lazy-lock.json
 
+# karabiner backups (auto-generated)
+karabiner/.config/karabiner/automatic_backups/
+
 # OS
 .DS_Store

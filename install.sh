@@ -11,7 +11,7 @@ fi
 
 cd "$DOTFILES"
 
-for pkg in nvim tmux aerospace; do
+for pkg in nvim tmux aerospace zsh git ghostty karabiner; do
   echo "Stowing $pkg..."
   stow --restow "$pkg"
 done
