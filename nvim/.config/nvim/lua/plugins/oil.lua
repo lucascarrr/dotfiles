@@ -13,10 +13,10 @@ return {
 	},
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
+		-- .lp/.asp not in devicons; borrow the Prolog icon with a distinct colour
 		require("nvim-web-devicons").set_icon({
-			lp = { icon = "󰡱", color = "#E77D26", name = "Clingo" },
-			asp = { icon = "󰡱", color = "#E77D26", name = "ASP" },
-			pro = { icon = "󰘧", color = "#6B8CFF", name = "Prolog" },
+			lp  = { icon = "", color = "#E77D26", cterm_color = "208", name = "Clingo" },
+			asp = { icon = "", color = "#E77D26", cterm_color = "208", name = "ASP" },
 		})
 
 		require("oil").setup({})
