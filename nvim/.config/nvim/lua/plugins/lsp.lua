@@ -72,6 +72,18 @@ return {
 			root_markers = { ".git", ".marksman.toml" },
 		}
 
-		vim.lsp.enable({ "basedpyright", "texlab", "tinymist", "marksman" })
+		-- Prolog (SWI-Prolog built-in LSP server)
+		vim.lsp.config.prolog_lsp = {
+			cmd = {
+				"swipl",
+				"-g", "use_module(library(lsp_server)),lsp_server:main",
+				"-t", "halt",
+				"--", "--stdio",
+			},
+			filetypes = { "prolog" },
+			root_markers = { ".git" },
+		}
+
+		vim.lsp.enable({ "basedpyright", "texlab", "tinymist", "marksman", "prolog_lsp" })
 	end,
 }

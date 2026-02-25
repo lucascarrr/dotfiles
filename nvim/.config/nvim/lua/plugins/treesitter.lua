@@ -14,10 +14,13 @@ return {
 			filetype = "clingo",
 		}
 
-		-- Associate .lp files with clingo filetype
+		-- Filetype associations
 		vim.filetype.add({
 			extension = {
 				lp = "clingo",
+				asp = "clingo",
+				pro = "prolog",
+				prolog = "prolog",
 			},
 		})
 
@@ -33,6 +36,7 @@ return {
 				"clojure",
 				"typst",
 				"clingo",
+				"prolog",
 			},
 			highlight = {
 				enable = true,
