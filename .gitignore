@@ -1,0 +1,8 @@
+# tmux plugins (managed by TPM)
+tmux/.config/tmux/plugins/
+
+# nvim plugin lockfile (optional: remove if you want to pin versions)
+# nvim/.config/nvim/lazy-lock.json
+
+# OS
+.DS_Store
