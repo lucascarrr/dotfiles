@@ -1,4 +1,4 @@
-local selected = "verc" -- options: "lucy", "flexoki", "earlgrey", "zenbones"
+local selected = "flexoki" -- options: "lucy", "flexoki", "earlgrey", "zenbones"
 
 local colorschemes = {
 	lucy = {

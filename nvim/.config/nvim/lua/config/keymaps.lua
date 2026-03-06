@@ -65,3 +65,42 @@ function jump_pair()
 end
 vim.keymap.set({ "n" }, "<leader>R", ":RecordPicker<CR>", { silent = false })
 vim.keymap.set("n", "<D-s>", "<cmd>VimtexTocOpen<CR>", { noremap = true, silent = true })
+
+-- Floating terminal toggle
+local term_buf = nil
+local term_win = nil
+
+local function open_float_term()
+	local width = math.floor(vim.o.columns * 0.8)
+	local height = math.floor(vim.o.lines * 0.8)
+	local col = math.floor((vim.o.columns - width) / 2)
+	local row = math.floor((vim.o.lines - height) / 2)
+
+	if term_win and vim.api.nvim_win_is_valid(term_win) then
+		vim.api.nvim_win_close(term_win, false)
+		term_win = nil
+		return
+	end
+
+	if not (term_buf and vim.api.nvim_buf_is_valid(term_buf)) then
+		term_buf = vim.api.nvim_create_buf(false, true)
+	end
+
+	term_win = vim.api.nvim_open_win(term_buf, true, {
+		relative = "editor",
+		width = width,
+		height = height,
+		col = col,
+		row = row,
+		style = "minimal",
+		border = "rounded",
+	})
+
+	if vim.bo[term_buf].buftype ~= "terminal" then
+		vim.cmd("terminal")
+	else
+		vim.cmd("startinsert")
+	end
+end
+
+vim.keymap.set({ "n", "t" }, "<leader>T", open_float_term, { silent = true })

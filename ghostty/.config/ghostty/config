@@ -1,0 +1,7 @@
+# Visuals
+font-family = TX-02-XlabMono
+font-size = 16
+macos-icon = paper
+theme = light:Flexoki Light,dark:Flexoki Dark
+cursor-style = underline
+shell-integration-features = no-cursor

@@ -11,9 +11,53 @@ return {
 	config = function()
 		require("mason").setup()
 		require("mason-lspconfig").setup({
-			ensure_installed = { "basedpyright", "texlab", "marksman" },
+			ensure_installed = { "ruff", "texlab", "marksman" },
 			-- tinymist installed via homebrew, not mason
+			-- ty installed via: uv tool install ty
 		})
+
+		-- Diagnostic display: cycle through errors-only → all → off
+		local diag_level = 1
+		local diag_configs = {
+			{
+				label = "errors only",
+				cfg = {
+					virtual_text = false,
+					signs = { severity = { min = vim.diagnostic.severity.ERROR } },
+					underline = { severity = { min = vim.diagnostic.severity.ERROR } },
+					update_in_insert = false,
+					float = { border = "rounded" },
+				},
+			},
+			{
+				label = "all",
+				cfg = {
+					virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
+					signs = true,
+					underline = true,
+					update_in_insert = false,
+					float = { border = "rounded" },
+				},
+			},
+			{
+				label = "off",
+				cfg = {
+					virtual_text = false,
+					signs = false,
+					underline = false,
+					update_in_insert = false,
+					float = { border = "rounded" },
+				},
+			},
+		}
+
+		vim.diagnostic.config(diag_configs[diag_level].cfg)
+
+		vim.keymap.set("n", "<leader>td", function()
+			diag_level = (diag_level % #diag_configs) + 1
+			vim.diagnostic.config(diag_configs[diag_level].cfg)
+			vim.notify("Diagnostics: " .. diag_configs[diag_level].label, vim.log.levels.INFO)
+		end, { desc = "Cycle diagnostics level" })
 
 		-- Keymaps (set on LSP attach)
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -29,15 +73,27 @@ return {
 			end,
 		})
 
-		-- Python
-		vim.lsp.config.basedpyright = {
-			cmd = { "basedpyright-langserver", "--stdio" },
+		-- Python: linting + code actions
+		vim.lsp.config.ruff = {
+			cmd = { "ruff", "server" },
 			filetypes = { "python" },
-			root_markers = { "pyproject.toml", "setup.py", ".git" },
-			settings = {
-				basedpyright = {
-					typeCheckingMode = "off",
-				},
+			root_markers = { "pyproject.toml", "ruff.toml", ".ruff.toml", ".git" },
+		}
+
+		-- Python: type checking (install via: uv tool install ty)
+		vim.lsp.config.ty = {
+			cmd = { "ty", "server" },
+			filetypes = { "python" },
+			root_markers = { "pyproject.toml", ".git" },
+			handlers = {
+				["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+					if result and result.diagnostics then
+						result.diagnostics = vim.tbl_filter(function(d)
+							return d.severity == 1 -- errors only
+						end, result.diagnostics)
+					end
+					vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+				end,
 			},
 		}
 
@@ -84,6 +140,6 @@ return {
 			root_markers = { ".git" },
 		}
 
-		vim.lsp.enable({ "basedpyright", "texlab", "tinymist", "marksman", "prolog_lsp" })
+		vim.lsp.enable({ "ruff", "ty", "texlab", "tinymist", "marksman", "prolog_lsp" })
 	end,
 }
